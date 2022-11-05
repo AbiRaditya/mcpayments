@@ -36,3 +36,67 @@
     transform: rotate(360deg);
   }
 }
+.budget-plan,
+.expenses {
+  padding: 50px 10vw 50px 10vw;
+}
+.budget-plan > div {
+  display: flex;
+  justify-content: center;
+}
+@media screen and (max-width: 480px) {
+  .budget-plan > div {
+    display: unset;
+  }
+  .budget-plan > div > div {
+    width: unset !important;
+  }
+}
+
+.budget-plan > div > div {
+  /* display: flex; */
+  /* border: 1px solid gray; */
+  border-radius: 5px;
+  margin: 10px;
+  padding: 20px;
+  width: 33%;
+}
+.budget__total {
+  background-color: aquamarine;
+}
+.budget__spent {
+  background-color: aliceblue;
+}
+.budget__remaining {
+  background-color: rgb(176, 176, 176);
+}
+.expenses__indv {
+  display: flex;
+}
+.expenses__indv > p {
+  margin-right: 20px;
+}
+.modal {
+  border-radius: 5px;
+  background-color: aliceblue;
+  padding: 50px;
+
+  width: 500px;
+  height: 500px;
+}
+.modal > form,
+.modal > form > div {
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+}
+.modal > form {
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+.temp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
