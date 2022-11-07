@@ -51,6 +51,9 @@
   .budget-plan > div > div {
     width: unset !important;
   }
+  .modal {
+    width: 80% !important;
+  }
 }
 
 .budget-plan > div > div {
@@ -70,33 +73,87 @@
 .budget__remaining {
   background-color: rgb(176, 176, 176);
 }
-.expenses__indv {
+.expenses__indv > .expenses__information {
   display: flex;
 }
-.expenses__indv > p {
+.expenses__indv > .expenses__information > p {
   margin-right: 20px;
-}
-.modal {
-  border-radius: 5px;
-  background-color: aliceblue;
-  padding: 50px;
-
-  width: 500px;
-  height: 500px;
-}
-.modal > form,
-.modal > form > div {
-  display: flex;
-  /* justify-content: center; */
-  flex-direction: column;
-}
-.modal > form {
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
 }
 .temp-container {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  z-index: 1000;
+  /* min-width: 300px; */
+  border-radius: 5px;
+  width: 60%;
+}
+.modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0 15px 15px 15px;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+}
+.form-expense {
+  padding: 0 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+}
+.form-expense > div {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.form-expense input {
+  border-radius: 5px;
+  outline: 1px solid #5d5d5d;
+  border: none;
+  padding: 10px;
+}
+.form-expense input:focus {
+  outline: 2px solid #373737;
+  /* background-color: red; */
+}
+.form-expense > div > input:not(:last-child) {
+  margin-bottom: 20px;
+}
+.button-submit,
+.close-modal {
+  margin-top: 20px;
+  border-radius: 5px;
+  border: none;
+  /* background: none; */
+  background-color: rgb(168 196 228);
+  padding: 12px;
+  cursor: pointer;
+}
+.close-modal {
+  background-color: rgb(227, 153, 153);
+  margin-top: 0;
+}
+.expenses__header {
+  display: flex;
+  justify-content: space-between;
+}
+.input-form {
+  display: grid;
+  margin-bottom: 12px;
 }
