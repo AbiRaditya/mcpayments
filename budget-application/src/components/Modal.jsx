@@ -1,19 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDom from "react-dom";
 
 const Modal = ({ open, children, onClose, modalTitle }) => {
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = "15px";
-      return () => {
-        document.body.style.paddingRight = "0px";
-        document.body.style.overflow = "unset";
-      };
-    }
-  }, [open]);
+  // useEffect(() => {
+  //   if (open) {
+  //     document.body.style.overflow = "hidden";
+  //     document.body.style.paddingRight = "15px";
+  //     return () => {
+  //       document.body.style.paddingRight = "0px";
+  //       document.body.style.overflow = "unset";
+  //     };
+  //   }
+  // }, [open]);
 
-  if (!open) return null;
+  // if (!open) return null;
 
   return ReactDom.createPortal(
     <>

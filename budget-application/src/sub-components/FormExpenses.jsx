@@ -1,8 +1,14 @@
 import React, { useRef, useEffect } from "react";
 
-const FormExpenses = ({ initialExpenseData = {}, expenseAdd }) => {
+const FormExpenses = ({
+  initialExpenseData = {},
+  expenseAdd,
+  isEdit = false,
+  expenseEdit,
+}) => {
   const nameRef = useRef();
   const priceRef = useRef();
+  const idRef = useRef();
 
   function dummyId(name) {
     const Rng = Math.random() * 100;
@@ -10,6 +16,7 @@ const FormExpenses = ({ initialExpenseData = {}, expenseAdd }) => {
   }
   useEffect(() => {
     if (initialExpenseData.name || initialExpenseData.price) {
+      idRef.current = initialExpenseData.id;
       nameRef.current.value = initialExpenseData.name;
       priceRef.current.value = initialExpenseData.price;
     }
@@ -18,11 +25,17 @@ const FormExpenses = ({ initialExpenseData = {}, expenseAdd }) => {
   function submitForm(e) {
     // console.log(e, "submitForm", nameRef.current.value, priceRef.current.value);
     e.preventDefault();
-    expenseAdd({
-      id: dummyId(nameRef.current.value),
-      name: nameRef.current.value,
-      price: priceRef.current.value,
-    });
+    if (nameRef.current.value) {
+      const data = {
+        name: nameRef.current.value,
+        price: priceRef.current.value ? priceRef.current.value : 0,
+      };
+      if (isEdit) {
+        expenseEdit({ ...data, id: idRef.current });
+      } else {
+        expenseAdd({ ...data, id: dummyId(nameRef.current.value) });
+      }
+    }
   }
 
   return (
@@ -30,7 +43,12 @@ const FormExpenses = ({ initialExpenseData = {}, expenseAdd }) => {
       <div>
         <div className="input-form">
           <label>Name</label>
-          <input ref={nameRef} type="text" placeholder="Name of expense" />
+          <input
+            required
+            ref={nameRef}
+            type="text"
+            placeholder="Name of expense"
+          />
         </div>
         <div className="input-form">
           <label>Price</label>
