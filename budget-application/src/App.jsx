@@ -42,6 +42,7 @@ function App() {
   function onSubmitBudget(budgetData) {
     setBudget(() => {
       localStorage.setItem("budget", JSON.stringify(budgetData));
+      setIsModalOpen(false);
       return budgetData;
     });
   }
@@ -73,6 +74,10 @@ function App() {
   }
   function deleteExpense(id) {
     // const newArray = expense.splice(index, 1);
+    let answer = window.confirm("Delete?");
+    if (!answer) {
+      return;
+    }
     setExpense((currentValue) => {
       const newValue = currentValue.filter((expense) => {
         return expense.id !== id;
@@ -142,6 +147,7 @@ function App() {
           isEdit={isEditExpense.current}
           isBudget={isBudget.current}
           onSubmitBudget={onSubmitBudget}
+          initialBudgetData={budget}
         ></FormModal>
       </ModalFormExpense>
       <div className="container">
@@ -157,7 +163,9 @@ function App() {
                   currency: "IDR",
                 })}{" "}
               </span>{" "}
-              <button onClick={editBudget}>Set</button>
+              <button className="set-button" onClick={editBudget}>
+                SET
+              </button>
             </div>
             <div className="budget__spent">
               <span>Spent:</span>

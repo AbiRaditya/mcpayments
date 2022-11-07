@@ -9,9 +9,17 @@ const formService = ({
   expenseEdit,
   isEdit,
   isBudget,
+  initialBudgetData,
 }) => {
   if (isBudget) {
-    return <FormBudget onSubmitBudget={onSubmitBudget}>{children}</FormBudget>;
+    return (
+      <FormBudget
+        initialBudget={initialBudgetData}
+        onSubmitBudget={onSubmitBudget}
+      >
+        {children}
+      </FormBudget>
+    );
   } else {
     return (
       <FormExpenses

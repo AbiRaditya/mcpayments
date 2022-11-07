@@ -22,20 +22,18 @@ const Expenses = ({
 
             <div className="expenses__buttons">
               <button
+                className="edit-button"
                 onClick={() => {
                   editExpenseButton(expense);
                 }}
-              >
-                Edit
-              </button>
+              ></button>
 
               <button
+                className="delete-button"
                 onClick={() => {
                   deleteExpenseButton(expense.id);
                 }}
-              >
-                Delete
-              </button>
+              ></button>
             </div>
           </div>
         );
