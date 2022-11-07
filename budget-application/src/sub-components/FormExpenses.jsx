@@ -28,7 +28,7 @@ const FormExpenses = ({
     if (nameRef.current.value) {
       const data = {
         name: nameRef.current.value,
-        price: priceRef.current.value ? priceRef.current.value : 0,
+        price: priceRef.current.value ? +priceRef.current.value : 0,
       };
       if (isEdit) {
         expenseEdit({ ...data, id: idRef.current });
@@ -56,7 +56,7 @@ const FormExpenses = ({
         </div>
       </div>
       <button className="button-submit" type="submit">
-        Add
+        Save
       </button>
     </form>
   );
