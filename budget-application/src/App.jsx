@@ -1,6 +1,6 @@
 // import logo from './logo.svg';
 import "./App.css";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 // import Modal from "./components/Modal";
 import FormExpenses from "./sub-components/FormExpenses";
 // import useFetch from "./helpers/useFetch";
@@ -9,9 +9,22 @@ import Expenses from "./components/Expenses";
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [budget, setBudget] = useState(0);
   const [expenses, setExpense] = useState([]);
 
   const modalTitle = "Add an expense";
+
+  const budgetInformation = useMemo(() => {
+    const totalSpent = expenses.reduce(
+      (previousValue, currentValue) => previousValue.price + currentValue.price,
+      0
+    );
+    const remainingBudget = budget - totalSpent;
+    return {
+      totalSpent,
+      remainingBudget,
+    };
+  }, [budget, expenses]);
 
   const editDataRef = useRef();
   const isEditExpense = useRef(false);
@@ -31,6 +44,7 @@ function App() {
     setExpense((currentValue) => {
       const newValue = [...currentValue, expenseData];
       localStorage.setItem("expenses", JSON.stringify(newValue));
+      closeModal();
       return newValue;
     });
     // deleteExpense(2);
@@ -56,15 +70,22 @@ function App() {
     const indexOfEdit = expenses.findIndex(function (each) {
       return each.id == newExpenseData.id;
     });
-    console.log(indexOfEdit, "indexOfEdit", newExpenseData);
+    setExpense((currentValue) => {
+      // const newValue = [...currentValue, newExpenseData];
+      const newValue = [...currentValue];
+      newValue[indexOfEdit] = newExpenseData;
+      localStorage.setItem("expenses", JSON.stringify(newValue));
+      closeModal();
+      return newValue;
+    });
   }
 
   useEffect(() => {
     const expenses = localStorage.getItem("expenses");
     if (expenses) {
-      const oldExpneses = JSON.parse(expenses);
-      if (Array.isArray(oldExpneses)) {
-        setExpense(oldExpneses);
+      const oldExpenses = JSON.parse(expenses);
+      if (Array.isArray(oldExpenses)) {
+        setExpense(oldExpenses);
       } else {
         localStorage.setItem("expenses", JSON.stringify([]));
       }
@@ -106,7 +127,8 @@ function App() {
           <h1>Budget Planner</h1>
           <div>
             <div className="budget__total">
-              <span>Total:</span> <span> 500 </span>
+              <span>Total:</span> <span> 500 </span>{" "}
+              <button>Edit Budget</button>
             </div>
             <div className="budget__spent">
               <span>Spent:</span>
