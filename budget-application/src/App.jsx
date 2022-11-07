@@ -1,46 +1,69 @@
 // import logo from './logo.svg';
 import "./App.css";
 import React, { useState, useEffect, useRef, useMemo } from "react";
-// import Modal from "./components/Modal";
-import FormExpenses from "./sub-components/FormExpenses";
-// import useFetch from "./helpers/useFetch";
 import ModalService from "./service/ModalService";
+import formService from "./service/FormService";
 import Expenses from "./components/Expenses";
+
+import AddSvg from "./images/add-plus-svgrepo-com.svg";
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [budget, setBudget] = useState(0);
   const [expenses, setExpense] = useState([]);
 
-  const modalTitle = "Add an expense";
+  // const modalTitle = "Add an expense";
 
   const budgetInformation = useMemo(() => {
-    const totalSpent = expenses.reduce(
-      (previousValue, currentValue) => previousValue.price + currentValue.price,
-      0
-    );
-    const remainingBudget = budget - totalSpent;
+    if (budget) {
+      const totalSpent = expenses
+        .map((expense) => +expense.price)
+        .reduce((previousValue, currentValue) => {
+          const sum = previousValue + currentValue;
+          return sum;
+        });
+      const remainingBudget = +budget - +totalSpent;
+      return {
+        totalSpent,
+        remainingBudget,
+      };
+    }
     return {
-      totalSpent,
-      remainingBudget,
+      totalSpent: 0,
+      remainingBudget: 0,
     };
   }, [budget, expenses]);
 
   const editDataRef = useRef();
+  const modalTitle = useRef("Add expense");
   const isEditExpense = useRef(false);
+  const isBudget = useRef(false);
 
+  function onSubmitBudget(budgetData) {
+    setBudget(() => {
+      localStorage.setItem("budget", JSON.stringify(budgetData));
+      setIsModalOpen(false);
+      return budgetData;
+    });
+  }
   function openModal() {
     editDataRef.current = {};
     isEditExpense.current = false;
+    modalTitle.current = "Add Expense";
+    isBudget.current = false;
     setIsModalOpen(true);
   }
   function closeModal() {
     editDataRef.current = {};
     setIsModalOpen(false);
   }
+  function editBudget() {
+    isBudget.current = true;
+    modalTitle.current = "Set Budget";
+    setIsModalOpen(true);
+  }
 
   function addExpense(expenseData) {
-    console.log("addExpense", expenseData);
     setExpense((currentValue) => {
       const newValue = [...currentValue, expenseData];
       localStorage.setItem("expenses", JSON.stringify(newValue));
@@ -51,6 +74,10 @@ function App() {
   }
   function deleteExpense(id) {
     // const newArray = expense.splice(index, 1);
+    let answer = window.confirm("Delete?");
+    if (!answer) {
+      return;
+    }
     setExpense((currentValue) => {
       const newValue = currentValue.filter((expense) => {
         return expense.id !== id;
@@ -63,6 +90,8 @@ function App() {
   function editExpenseButton(expenseData) {
     editDataRef.current = expenseData;
     isEditExpense.current = true;
+    isBudget.current = false;
+    modalTitle.current = "Edit Expense";
     setIsModalOpen(true);
   }
 
@@ -82,8 +111,13 @@ function App() {
 
   useEffect(() => {
     const expenses = localStorage.getItem("expenses");
+    const budget = localStorage.getItem("budget");
     if (expenses) {
       const oldExpenses = JSON.parse(expenses);
+      const oldBudget = JSON.parse(budget);
+      if (oldBudget) {
+        setBudget(oldBudget);
+      }
       if (Array.isArray(oldExpenses)) {
         setExpense(oldExpenses);
       } else {
@@ -97,53 +131,70 @@ function App() {
   }
 
   const ModalFormExpense = modalComponent(ModalService);
+  const FormModal = modalComponent(formService);
 
   return (
     <div className="App">
       <ModalFormExpense
         isModalOpen={isModalOpen}
         closeModal={closeModal}
-        modalTitle={modalTitle}
+        modalTitle={modalTitle.current}
       >
-        <FormExpenses
+        <FormModal
           initialExpenseData={editDataRef.current}
           expenseAdd={addExpense}
           expenseEdit={editExpense}
           isEdit={isEditExpense.current}
-        ></FormExpenses>
+          isBudget={isBudget.current}
+          onSubmitBudget={onSubmitBudget}
+          initialBudgetData={budget}
+        ></FormModal>
       </ModalFormExpense>
-      {/* <Modal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        modalTitle={modalTitle}
-      >
-        <FormExpenses
-          initialExpenseData={editDataRef.current}
-          expenseAdd={addExpense}
-        ></FormExpenses>
-      </Modal> */}
       <div className="container">
         <div className="budget-plan">
           <h1>Budget Planner</h1>
           <div>
             <div className="budget__total">
-              <span>Total:</span> <span> 500 </span>{" "}
-              <button>Edit Budget</button>
+              <span>Total:</span>{" "}
+              <span>
+                {" "}
+                {budget.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                })}{" "}
+              </span>{" "}
+              <button className="set-button" onClick={editBudget}>
+                SET
+              </button>
             </div>
             <div className="budget__spent">
               <span>Spent:</span>
-              <span>100</span>
+              <span>
+                {budgetInformation.totalSpent.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                })}
+              </span>
             </div>
             <div className="budget__remaining">
               <span>Remaining:</span>
-              <span>400</span>
+              <span>
+                {budgetInformation.remainingBudget.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                })}
+              </span>
             </div>
           </div>
         </div>
         <div className="expenses">
           <div className="expenses__header">
             <h1>Expenses</h1>
-            <button onClick={openModal}>Add</button>
+            <div className="add-button-container">
+              <button className="add-button" onClick={openModal}>
+                {/* <img src={AddSvg} alt="" /> */}
+              </button>
+            </div>
           </div>
           <Expenses
             expenses={expenses}

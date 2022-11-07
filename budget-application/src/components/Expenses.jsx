@@ -11,25 +11,30 @@ const Expenses = ({
         return (
           <div className="expenses__indv" key={expense.id}>
             <div className="expenses__information">
-              <p>{expense.price}</p>
+              <p>
+                {expense.price.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                })}
+              </p>
               <p>{expense.name}</p>
             </div>
 
-            <button
-              onClick={() => {
-                editExpenseButton(expense);
-              }}
-            >
-              Edit
-            </button>
+            <div className="expenses__buttons">
+              <button
+                className="edit-button"
+                onClick={() => {
+                  editExpenseButton(expense);
+                }}
+              ></button>
 
-            <button
-              onClick={() => {
-                deleteExpenseButton(expense.id);
-              }}
-            >
-              Delete
-            </button>
+              <button
+                className="delete-button"
+                onClick={() => {
+                  deleteExpenseButton(expense.id);
+                }}
+              ></button>
+            </div>
           </div>
         );
       })}
