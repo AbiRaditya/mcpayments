@@ -157,3 +157,7 @@
   display: grid;
   margin-bottom: 12px;
 }
+.expenses-container {
+  max-height: 300px;
+  overflow: auto;
+}
